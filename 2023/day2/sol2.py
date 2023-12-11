@@ -24,20 +24,20 @@ def parse_game(line):
         res.append(d)
     return n, res
 
-def process_data(lines, maxgame):
+def process_data(lines):
     res = 0
     for l in lines:
         n, rounds = parse_game(l)
-        if any(is_impossible(r, maxgame) for r in rounds):
-            continue
+        n = 1
+        for c in COLORS:
+            n *= max(r[c] for r in rounds)
         res += n
     return res
 
 
-def process(filename, red, green, blue):
-    game = {'red': red, 'green': green, 'blue':blue}
-    res = process_data(open(filename), game)
+def process(filename):
+    res = process_data(open(filename))
     print("result: %d" % res)
 
 if __name__ == '__main__':
-    process(sys.argv[1], *[int(x) for x in sys.argv[2:]])
+    process(sys.argv[1])
