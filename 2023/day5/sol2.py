@@ -13,7 +13,7 @@ class Interval(object):
         return self.start + self.length
 
     def __repr__(self):
-        return '(%d, %d)' % (self.start, self.end)
+        return '(%d, %d, %d)' % (self.start, self.end, self.length)
 
     def map(self, intervals):
         res = []
@@ -22,26 +22,27 @@ class Interval(object):
 
         for i in intervals:
             # skip over the mappings that are too early
-            if start >= i.end:
+            if start > i.end:
                 continue
 
             # skip over the mapping that are too late
             if end < i.start:
-                continue
+                break
 
             if start < i.start:
-                res.append((start, i.start))
+                res.append((start, (i.start - start)))
                 start = i.start
 
             new_end = min(end, i.end)
-            res.append((start, new_end))
+            new_length = new_end - start
+            res.append((i.map(start), new_length))
             start = new_end
 
         # append the non mapped part.
         if start != end:
-            res.append((start, end))
+            res.append((start, end-start))
 
-        return res
+        return sorted(res)
 
 
 class Mapping(object):
@@ -71,12 +72,13 @@ class Mapping(object):
         return self.destination + (s - self.source)
 
     def __repr__(self):
-        return '(%d, %d) -> %d)' % (self.source, self.length, self.destination)
+        return '(%d, %d) -> %d)' % (self.source, self.end, self.destination)
 
 
 class Seeds(object):
 
     def __init__(self, line=None, seeds=[]):
+        seeds.sort()
         self.seeds = [Interval(x) for x in seeds]
         if line:
             _, s = re.split(r':\s+', line)

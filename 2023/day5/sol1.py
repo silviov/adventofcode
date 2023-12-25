@@ -36,7 +36,6 @@ def process_section(lines, start):
 def process_data(data):
     lines = [x.rstrip() for x in data]
     seeds = process_seed(lines[0])
-    print(seeds)
 
     i = 2
     while i < len(lines):
@@ -51,7 +50,6 @@ def process_data(data):
                     v = c
             new_seeds.append(v)
         seeds = new_seeds
-        print(seeds)
 
     return min(seeds)
 

@@ -44,6 +44,15 @@ class TestSol2(unittest.TestCase):
     def testData(self):
         self.assertEqual(46, sol2.process_data(self.DATA))
 
+    def testMapping(self):
+        mapping = [
+            sol2.Mapping("50 100 5"),
+            sol2.Mapping("60 110 5"),
+            sol2.Mapping("30 115 10"),
+        ]
+        i = sol2.Interval((90, 40))
+        self.assertEqual([(30, 10), (50, 5), (60, 5), (90, 10), (105, 5), (125, 5)], i.map(mapping))
+
 
 if __name__ == '__main__':
     unittest.main()
